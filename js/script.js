@@ -39,27 +39,24 @@ function showPage(list, page) {
    // Set the innerHTML property of the `studentList` variable to an empty string
    studentList.innerHTML = '';
 
-   // Loop over the length of the `list` parameter
-   for (let i = 0; i < list.length; i++) {
-      // Inside the loop, create a conditional to display the proper students
-      if (i >= startIndex && i <= endIndex) {
-         // Create the elements needed to display the student information
-         const studentItem = document.createElement('li');
-         const studentDetails = `
-            <div class="student-details">
-               <img class="avatar" src="${list[i].picture.thumbnail}" alt="Profile Picture">
-               <h3 class="name">${list[i].name.first} ${list[i].name.last}</h3>
-               <span class="email">${list[i].email}</span>
-            </div>
-            <div class="joined-details">
-               <span class="date">Joined ${list[i].registered.date}</span>
-            </div>
-         `;
-         // Set the innerHTML of the studentItem to the studentDetails
-         studentItem.innerHTML = studentDetails;
-         // Append the studentItem to the studentList
-         studentList.appendChild(studentItem);
-      }
+   // Loop over the list of students to display
+   for (let i = startIndex; i <= endIndex; i++) {
+      // Create the elements needed to display the student information
+      const studentItem = document.createElement('li');
+      const studentDetails = `
+         <div class="student-details">
+            <img class="avatar" src="${list[i].picture.thumbnail}" alt="Profile Picture">
+            <h3 class="name">${list[i].name.first} ${list[i].name.last}</h3>
+            <span class="email">${list[i].email}</span>
+         </div>
+         <div class="joined-details">
+            <span class="date">Joined ${list[i].registered.date}</span>
+         </div>
+      `;
+      // Set the innerHTML of the studentItem to the studentDetails
+      studentItem.innerHTML = studentDetails;
+      // Append the studentItem to the studentList
+      studentList.appendChild(studentItem);
    }
 }
 
@@ -108,8 +105,21 @@ function addPagination(list) {
    });
 }
 
+// Search functionality
+document.getElementById('searchButton').addEventListener('click', function() {
+   const searchInput = document.getElementById('search').value.trim().toLowerCase();
+   const filteredList = data.filter(student => {
+      const fullName = `${student.name.first.toLowerCase()} ${student.name.last.toLowerCase()}`;
+      return fullName.includes(searchInput);
+   });
+   showPage(filteredList, 1);
+   addPagination(filteredList);
+});
+
 // Call the showPage function to display the first page of students
 showPage(data, 1);
 // Call the addPagination function to create pagination buttons
 addPagination(data);
+
+
 
